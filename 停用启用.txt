@@ -1,0 +1,239 @@
+let flag2 = true;
+    let bstop = false;
+    $(".fl-rt a:nth-child(8)").on("click",stop)
+    function stop(){
+        bstop = true;
+        let th = $("<th width=\"50\" class=\"allcheckbox\">\n" +
+            "                                                                <div class=\"checkbox achecked\">\n" +
+            "                                                                    <input type=\"checkbox\"  name=\"allChecked\" value=\"\" id='allselect' >\n" +
+            "                                                                </div>\n" +
+            "                                                            </th>");
+        let td = $("<td class=\"cboxs\">\n" +
+            "                                                                    <div class=\"checkbox achecked\">\n" +
+            "                                                                        <input type=\"checkbox\" name=\"cbox\" class='loney' value=\"\">\n" +
+            "                                                                    </div>\n" +
+            "                                                                </td>")
+        if(flag2 ==  true){
+            $(".tablehead").children("tr").prepend(th);
+            $(".roomtbody").children("tr").prepend(td);
+            flag2 = false;
+        }else {
+            $(".allcheckbox").remove();
+            $(".cboxs").remove();
+            flag2 = true;
+        }
+        function setItemCheckBox(flag) {
+            $(":checkbox[name=cbox]").prop("checked",flag);
+        }
+        //点击全选
+        $("#allselect").on("click",function(){
+            //1.获取全选的状态
+            var flag = this.checked;//获取全选的状态
+            if(flag){
+                $(this).prop("checked", true);
+            }else{
+                $(this).prop("checked", false);
+            }
+            //2.让所有条目的复选框与全选的状态同步
+            setItemCheckBox(flag);
+        });
+        //给所有复选框添加事件
+        $(":checkbox[name=cbox]").on("click",function(){
+            var flagV = this.checked;
+            if(flagV){
+                $(this).prop("checked", true);
+            }else{
+                $(this).prop("checked", false);
+            }
+            //获取所有复选框的个数
+            var len = $(":checkbox[name=cbox]").length;
+            //获取所有被选中的复选框的个数
+            var checked_len = $(":checkbox[name=cbox]:checked").length;
+            if(len == checked_len){
+                //alert("全选中了");
+                $("#allselect").prop("checked",true);
+            } else if(checked_len == 0) {
+                $("#allselect").prop("checked",false);
+            } else {
+                $("#allselect").prop("checked",false);
+            }
+        });
+    }
+
+    //启用
+    let nstart = false;
+    $(".fl-rt a:nth-child(7)").on("click",start)
+    function start(){
+        nstart = true;
+        let th = $("<th width=\"50\" class=\"allcheckbox\">\n" +
+            "                                                                <div class=\"checkbox achecked\">\n" +
+            "                                                                    <input type=\"checkbox\"  name=\"allChecked\" value=\"\" id='allselect' >\n" +
+            "                                                                </div>\n" +
+            "                                                            </th>");
+        let td = $("<td class=\"cboxs\">\n" +
+            "                                                                    <div class=\"checkbox achecked\">\n" +
+            "                                                                        <input type=\"checkbox\" name=\"cbox\" class='loney' value=\"\">\n" +
+            "                                                                    </div>\n" +
+            "                                                                </td>")
+        if(flag2 ==  true){
+            $(".tablehead").children("tr").prepend(th);
+            $(".roomtbody").children("tr").prepend(td);
+            flag2 = false;
+        }else {
+            $(".allcheckbox").remove();
+            $(".cboxs").remove();
+            flag2 = true;
+        }
+        function setItemCheckBox(flag) {
+            $(":checkbox[name=cbox]").prop("checked",flag);
+        }
+        //点击全选
+        $("#allselect").on("click",function(){
+            //1.获取全选的状态
+            var flag = this.checked;//获取全选的状态
+            if(flag){
+                $(this).prop("checked", true);
+            }else{
+                $(this).prop("checked", false);
+            }
+            //2.让所有条目的复选框与全选的状态同步
+            setItemCheckBox(flag);
+        });
+        //给所有复选框添加事件
+        $(":checkbox[name=cbox]").on("click",function(){
+            var flagV = this.checked;
+            if(flagV){
+                $(this).prop("checked", true);
+            }else{
+                $(this).prop("checked", false);
+            }
+            //获取所有复选框的个数
+            var len = $(":checkbox[name=cbox]").length;
+            //获取所有被选中的复选框的个数
+            var checked_len = $(":checkbox[name=cbox]:checked").length;
+            if(len == checked_len){
+                //alert("全选中了");
+                $("#allselect").prop("checked",true);
+            } else if(checked_len == 0) {
+                $("#allselect").prop("checked",false);
+            } else {
+                $("#allselect").prop("checked",false);
+            }
+        });
+    }
+
+    let adds = false;
+    //保存
+    $(".btn-baocun").on("click",function(){
+        if(adds){
+            $(".fl-rt a:nth-child(7)").on("click",start);
+            $(".fl-rt a:nth-child(8)").on("click",stop);
+            let valarr = [];
+            let tr = $(".roomtbody tr:has('input')");
+            tr.each(function(index,ele){
+                let obj = {};
+                obj.id = $(this).find("td").eq(0).text();
+                obj.stime = $(this).find(".starttime").children("input").val();
+                obj.endtime = $(this).find(".endtime").children("input").val();
+                valarr[index] = obj;
+                $(this).find("input").each(function(){
+                    $(this).parent().text($(this).val());
+                })
+            })
+            $.ajax({
+                url:'',
+                data:valarr,
+                dataType:'json',
+                type:"GET",
+                success:function(res){
+                    if(res.code == 0){
+                        success("保存成功");
+                        valarr = [];
+                        obj={}
+                    }else{
+                        warnning("保存失败");
+                        valarr = [];
+                        obj={}
+                    }
+                }
+            })
+            adds = false;
+            console.log(valarr);
+        }else if(bstop){
+            console.log(4);
+            //获取停用的tr序号
+            let input = $("input[name='cbox']:checked");
+            let arry4 = [];
+            input.each(function(){
+                arry4.push($(this).closest("tr").children("td").eq(1).text());
+            })
+            console.log(arry4);
+            input.each(function(){
+                $(this).attr("checked",false);
+            })
+            $(".allcheckbox").remove();
+            $(".cboxs").remove();
+            warnning("操作失败")
+            $.ajax({
+                url:'',
+                dataType:'json',
+                data:arry4,
+                success:function(res){
+                    if(res.code == 0){
+                        input.each(function(){
+                            $(this).closest("tr").addClass("start").children("td:last").children(".btn-group").children("a:first").off("click");
+                            $(this).closest("tr").children("td:last").children(".btn-group").children("a:last").off("click");
+                            $(this).attr("checked",false);
+                        })
+                        $(".allcheckbox").remove();
+                        $(".cboxs").remove();
+                        success("操作成功");
+                    }else{
+                        input.each(function(){
+                            $(this).attr("checked",false);
+                        })
+                        $(".allcheckbox").remove();
+                        $(".cboxs").remove();
+                        warnning("操作失败")
+                    }
+                }
+            })
+            flag2 = true;
+            bstop=false;
+        }else if(nstart){
+            console.log(9);
+            //获取停用的tr序号
+            let input = $("input[name='cbox']:checked");
+            let arry5 = [];
+            input.each(function(){
+                arry5.push($(this).closest("tr").children("td").eq(1).text());
+            })
+            console.log(arry5);
+            $.ajax({
+                url:'',
+                dataType:'json',
+                data:arry5,
+                success:function(res){
+                    if(res.code == 0){
+                        input.each(function(){
+                            $(this).closest("tr").removeClass("start").children("td:last").children(".btn-group").children("a:first").on("click",modify);
+                            $(this).closest("tr").children("td:last").children(".btn-group").children("a:last").on("click",dels);
+                            $(this).attr("checked",false);
+                        })
+                        $(".allcheckbox").remove();
+                        $(".cboxs").remove();
+                        success("操作成功");
+                    }else{
+                        input.each(function(){
+                            $(this).attr("checked",false);
+                        })
+                        $(".allcheckbox").remove();
+                        $(".cboxs").remove();
+                        warnning("操作失败")
+                    }
+                }
+            })
+            flag2 = true;
+            nstart=false;
+        }
+    })
